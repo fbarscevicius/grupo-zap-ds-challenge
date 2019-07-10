@@ -1,5 +1,7 @@
+import numpy as np
 from pandas import DataFrame
 from typing import Any
+
 
 def download_json(url: str, path: str, filename: str) -> None:
     '''
@@ -118,3 +120,24 @@ def pkl_io(path: str, method: str='load', file: Any=None) -> Any:
         
         with open(path, 'wb') as f:
             pkl.dump(f, file)
+            
+            
+def convert_to_num(x: Any) -> float: 
+    """
+    Converts the input to float, assigning 'np.nan' if the
+    conversion fails.
+    
+    Args:
+        x: value to convert
+
+    Returns:
+        `x` value converted to float
+    """    
+    
+    try:
+        x = float(x)
+        
+    except (ValueError, TypeError):
+        x = np.nan
+
+    return x
