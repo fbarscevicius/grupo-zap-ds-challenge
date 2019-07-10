@@ -106,7 +106,7 @@ def pkl_io(path: str, method: str='load', file: Any=None) -> Any:
         return data
     
     else:
-        if not file: 
+        if file is None: 
             raise TypeError('`file` can not be None when method != "load"')
         
         # Extract directory from filename and assert it exists:
@@ -119,7 +119,7 @@ def pkl_io(path: str, method: str='load', file: Any=None) -> Any:
                 raise
         
         with open(path, 'wb') as f:
-            pkl.dump(f, file)
+            pkl.dump(file, f)
             
             
 def convert_to_num(x: Any) -> float: 
