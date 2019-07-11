@@ -1,6 +1,7 @@
 import numpy as np
-from pandas import DataFrame
-from typing import Any
+import pandas as pd
+
+from typing import Any, List
 
 
 def download_json(url: str, path: str, filename: str) -> None:
@@ -43,7 +44,7 @@ def download_json(url: str, path: str, filename: str) -> None:
     os.remove(path + filename + '.zip')
     
     
-def parse_json(path: str, verbose: bool = True) -> DataFrame:
+def parse_json(path: str, verbose: bool = True) -> pd.DataFrame:
     '''
     Converts a nested JSON file to a pd.DataFrame
     
@@ -141,3 +142,20 @@ def convert_to_num(x: Any) -> float:
         x = np.nan
 
     return x
+
+
+def clean_zap_data(df: pd.DataFrame, to_drop: list, id_variable: str, neighbour_variable: str) -> tuple:
+    df = df.copy()
+    
+    id_var        = df[id_variable].copy()
+    neighbour_var = df[neighbour_variable].copy()
+    
+    to_drop += [id_variable, neighbour_variable]
+    
+    df['publicationAge'] = (pd.to_datetime(df.updatedAt, errors='coerce').dt.date - pd.to_datetime(df.createdAt, errors='coerce').dt.date).dt.days
+    
+    df.drop(axis=1, columns=to_drop, inplace=True)
+    
+    return df, id_var, neighbour_var
+    
+    
