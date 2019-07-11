@@ -1,7 +1,10 @@
 import numpy as np
 import pandas as pd
 
-from typing import Any, List
+from typing import Any, List, Union
+from sklearn.metrics import mean_squared_error
+
+_SERIES_OR_ARRAY = Union[pd.core.series.Series, np.ndarray]
 
 
 def download_json(url: str, path: str, filename: str) -> None:
@@ -145,6 +148,19 @@ def convert_to_num(x: Any) -> float:
 
 
 def clean_zap_data(df: pd.DataFrame, to_drop: list, id_variable: str, neighbour_variable: str) -> tuple:
+    """
+    Cleans data according to EDA process
+    
+    Args:
+        df (pd.Series or np.ndarray): true response
+        to_drop (pd.Series or np.ndarray): predicted response
+        id_variable
+        neighbour_variable
+        
+    Returns:
+        tuple(cleaned_data, id_array, neighborhood_array)
+    """
+    
     df = df.copy()
     
     id_var        = df[id_variable].copy()
@@ -159,3 +175,16 @@ def clean_zap_data(df: pd.DataFrame, to_drop: list, id_variable: str, neighbour_
     return df, id_var, neighbour_var
     
     
+def rmse(y_true: _SERIES_OR_ARRAY, y_pred: _SERIES_OR_ARRAY) -> float:
+    """
+    Calculates de Root Mean Squared Error
+    
+    Args:
+        y_true (pd.Series or np.ndarray): true response
+        y_pred (pd.Series or np.ndarray): predicted response
+        
+    Returns:
+        RMSE value
+    """
+    
+    return mean_squared_error(y_true, y_pred)**0.5
